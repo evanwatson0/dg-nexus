@@ -1,0 +1,10 @@
+bcmath
+curl
+dom
+mysqli
+pdo_mysql
+readline
+simplexml
+xml
+xmlreader
+xmlwriter

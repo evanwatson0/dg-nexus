@@ -1,0 +1,26 @@
+{
+  "name": "llm-drug",
+  "version": "1.0.0",
+  "description": "As part of BIOM9450 major project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/evanwatson0/llm-drug.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/evanwatson0/llm-drug/issues"
+  },
+  "homepage": "https://github.com/evanwatson0/llm-drug#readme",
+  "dependencies": {
+    "module": "^2.0.0"
+  },
+  "type":"module"
+
+
+}

@@ -1,0 +1,30 @@
+header nav ul { 
+  list-style: none; 
+  display: flex; 
+  justify-content: center; 
+  margin: 0; 
+  padding: 0; 
+  background: #ffffff;
+}
+
+header nav li { 
+  margin: 0; 
+}
+
+header nav a { 
+  display: block; 
+  padding: 14px 20px; 
+  text-align: center; 
+  color: rgb(0, 0, 0); 
+  text-decoration: none; 
+  border-bottom: 3px solid transparent;
+}
+
+header nav a:hover, header nav a.active { 
+  background: #f3f4f6; 
+  border-bottom: 3px solid #111827; }
+
+header nav a div {
+  text-align: center; 
+  color: aqua;
+}
