@@ -1,5 +1,5 @@
 {
-  "name": "llm-drug",
+  "name": "dg-nexus",
   "version": "1.0.0",
   "description": "As part of BIOM9450 major project",
   "main": "index.js",
@@ -8,15 +8,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/evanwatson0/llm-drug.git"
+    "url": "git+https://github.com/evanwatson0/dg-nexus.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/evanwatson0/llm-drug/issues"
+    "url": "https://github.com/evanwatson0/dg-nexus/issues"
   },
-  "homepage": "https://github.com/evanwatson0/llm-drug#readme",
+  "homepage": "https://github.com/evanwatson0/dg-nexus#readme",
   "dependencies": {
     "module": "^2.0.0"
   },
