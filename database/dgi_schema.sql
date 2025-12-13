@@ -124,8 +124,8 @@ DROP TABLE IF EXISTS `web_user`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `web_user` (
     `UserIdentifier` int NOT NULL AUTO_INCREMENT,
-    `AccName` varchar(100) NOT NULL,
-    `Email` varchar(100) DEFAULT NULL,
+    `AccName` varchar(100) DEFAULT NULL,
+    `Email` varchar(100) NOT NULL,
     `Password` varchar(256) NOT NULL,
     PRIMARY KEY (`UserIdentifier`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

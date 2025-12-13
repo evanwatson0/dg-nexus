@@ -24,7 +24,7 @@ if (empty($_SESSION['logged_in'])) {
     <title>DG Nexus Main Page</title>
 
     <!-- Styling resources for Header -->
-    <link rel="stylesheet" href="./styling/header.css">
+    <link rel="stylesheet" href="../styling/header.css">
 
     <style>
    
@@ -35,7 +35,7 @@ if (empty($_SESSION['logged_in'])) {
             line-height: 1.5; 
             background: #f3f4f6;
 
-            background-image: url('styling/background.jpg');
+            background-image: url('../styling/background.jpg');
             background-repeat: no-repeat; 
             background-size: cover; 
             background-position: center;
@@ -227,11 +227,11 @@ if (empty($_SESSION['logged_in'])) {
     </style>
 </head>
 <body>
-    <?php include './header.php' ?>
+    <?php include '../extras/header.php' ?>
 
     <main>
 
-        <img src="styling/logo.png" class="center-img" alt="Centered">
+        <img src="../styling/logo.png" class="center-img" alt="Centered">
         <p class="muted">Enter a gene or drug and choose the interaction type. You can fill either field.</p>
         
         <!-- Search Form 

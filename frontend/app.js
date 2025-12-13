@@ -1,4 +1,4 @@
-import { mdToPdfSelectable } from '../llm/pdf_convert.js';
+import { mdToPdfSelectable } from './extra/pdf_convert.js';
 
 // const saveBtn = document.getElementById('save-btn');
 const saveLlmBtn = document.getElementById('save-llm-btn');
