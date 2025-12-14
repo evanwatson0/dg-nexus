@@ -1,5 +1,5 @@
 <?php
-  require_once __DIR__ . '../bootstrap.php';
+  require_once __DIR__ . '/../bootstrap.php';
 
   require ROOT_PATH . '/authentication/auth_check.php';
   // <!-- <?php require '../authentication/auth_check.php';
@@ -35,7 +35,7 @@
 
 
     <!-- Styling resources for Header -->
-    <link rel="stylesheet" href="styling/header.css">
+    <link rel="stylesheet" href="./styling/header.css">
 
     <style>
         body {
@@ -135,7 +135,7 @@
 </head>
 
 <body>
-  <?php include '../extras/header.php' ?>
+  <?php include ROOT_PATH . '/pages/extras/header.php' ?>
 
   <main>
     <h2>Drug-Gene Relation Loader</h2>
