@@ -1,4 +1,8 @@
-<?php require __DIR__ . '../authentication/auth_check.php'; ?>
+<?php 
+require_once __DIR__ . '/../bootstrap.php';
+require ROOT_PATH . '/authentication/auth_check.php'; 
+
+?>
 
 <!DOCTYPE html>
 <!-- 
@@ -15,7 +19,7 @@
     <title>DG Nexus Main Page</title>
 
     <!-- Styling resources for Header -->
-    <link rel="stylesheet" href="../styling/header.css">
+    <link rel="stylesheet" href="styling/header.css">
 
     <style>
    
@@ -218,7 +222,7 @@
     </style>
 </head>
 <body>
-    <?php include '../extras/header.php' ?>
+    <?php include 'extras/header.php' ?>
 
     <main>
 

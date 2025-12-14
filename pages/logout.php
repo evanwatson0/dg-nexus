@@ -1,6 +1,7 @@
 <?php
+require_once __DIR__ . '/../bootstrap.php';
 // logout.php
-require '../authentication/session_config.php';
+require ROOT_PATH . '/authentication/session_config.php';
 
 $_SESSION = [];
 session_destroy();

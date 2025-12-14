@@ -10,7 +10,7 @@
    * Called in dgi_req.php
    * 
    */
-  require __DIR__ . '../db_connect.php';
+  require ROOT_PATH . '/db_connect.php';
 
 
   /**

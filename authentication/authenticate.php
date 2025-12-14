@@ -1,9 +1,9 @@
 <?php
 // authenticate.php
 // Deteremines whether active user/pass is an actual user that has been registered or not
-
-require 'session_config.php';
-require '../../db_connect.php';
+require_once __DIR__ . '/../bootstrap.php';
+require ROOT_PATH . '/authentication/session_config.php';
+require ROOT_PATH . '/db_connect.php';
 
 
 $email = $_POST['email'] ?? '';

@@ -1,14 +1,13 @@
 <?php
-  require '../../bootstrap.php';
-  require ROOT_PATH . '/frontend/'
+  require_once __DIR__ . '../bootstrap.php';
 
-?>
+  require ROOT_PATH . '/authentication/auth_check.php';
+  // <!-- <?php require '../authentication/auth_check.php';
 
-<?php require '../authentication/auth_check.php'; ?>
-
-<?php 
-  include '../../data_flow/interaction_storage.php';
-  include '../../data_flow/dgi_req.php';
+  include ROOT_PATH . '/data_flow/interaction_storage.php';
+  include ROOT_PATH . '/data_flow/dgi_req.php';
+  // include '../../data_flow/interaction_storage.php';
+  // include '../../data_flow/dgi_req.php';
 
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $gene = $_POST['gene'];
@@ -16,6 +15,7 @@
     dgi_db_req($gene, $drug);
   }
 ?>
+
 
 <!DOCTYPE html>
 <!-- 
@@ -35,7 +35,7 @@
 
 
     <!-- Styling resources for Header -->
-    <link rel="stylesheet" href="../styling/header.css">
+    <link rel="stylesheet" href="styling/header.css">
 
     <style>
         body {
