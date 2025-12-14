@@ -1,17 +1,8 @@
-<?php
-session_start();
-
-if (empty($_SESSION['logged_in'])) {
-    header('Location: login.php');
-    exit;
-}
-?>
+<?php require __DIR__ . '../authentication/auth_check.php'; ?>
 
 <!DOCTYPE html>
 <!-- 
     Main Page for project
-
-    Primary Author: Claire
 
     This file provides the primary UI layout for thIS application.
     Only static HTML and structural components are defined here.
