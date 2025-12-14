@@ -1,3 +1,9 @@
+<?php
+  require '../../bootstrap.php';
+  require ROOT_PATH . '/frontend/'
+
+?>
+
 <?php require '../authentication/auth_check.php'; ?>
 
 <?php 
