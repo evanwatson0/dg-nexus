@@ -23,7 +23,6 @@ require ROOT_PATH . '/authentication/auth_check.php';
 
     <style>
    
-
         body { 
             font-family: system-ui, -apple-system, Segoe UI, Roboto, Noto Sans TC, Arial; 
             margin: 0; 
