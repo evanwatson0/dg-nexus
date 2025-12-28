@@ -10,7 +10,8 @@
    * Called in dgi_req.php
    * 
    */
-  include '../db_connect.php';
+  require_once __DIR__ . '/../bootstrap.php';
+  require ROOT_PATH . '/db_connect.php';
 
 
   /**

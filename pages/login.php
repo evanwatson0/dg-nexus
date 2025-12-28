@@ -1,6 +1,7 @@
 <?php
+require_once __DIR__ . '/../bootstrap.php';
 // login.php
-require '../authentication/session_config.php';
+require ROOT_PATH . '/authentication/session_config.php';
 
 // If already logged in, redirect
 if (isset($_SESSION['user_id'])) {
@@ -13,7 +14,7 @@ if (isset($_SESSION['user_id'])) {
 <html>
 <head>
     <title>Login</title>
-    <link rel="stylesheet" href="../styling/login_page.css">
+    <link rel="stylesheet" href="styling/login_page.css">
 
 </head>
 <body>

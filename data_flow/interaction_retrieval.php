@@ -10,7 +10,8 @@
    * We retrieve entries from the MySQL db (this file) to prompt the LLM
    * 
    */
-  include '../db_connect.php';
+  require_once __DIR__ . '/../bootstrap.php';
+  include ROOT_PATH . '/db_connect.php';
 
   header('Content-Type: application/json');
 
