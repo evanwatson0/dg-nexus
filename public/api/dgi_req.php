@@ -116,18 +116,16 @@
         exit;
     }
     
-
+    // return response
     $response = json_decode($response, true);
     if (json_last_error() !== JSON_ERROR_NONE) {
-      // echo json_encode(["error" => "DGIdb returned invalid JSON"]);
-      echo "error: DGI_db returned an invalid JSON";
-      exit;
+      return null;
     }
 
     if ($gene && isset($response["data"]["genes"])) {
-      insert_relations($response["data"]["genes"]);
+      return $response["data"]["genes"];
     } elseif ($drug && isset($response["data"]["drugs"])) {
-      insert_relations($response["data"]["drugs"]);
+      return $response["data"]["drugs"];
     }
   }
 

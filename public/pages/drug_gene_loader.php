@@ -1,14 +1,35 @@
 <?php
+
+use App\Services\GeneDrugDataPipeline;
   require_once __DIR__ . '/../bootstrap.php';
 
   require ROOT_PATH . '/authentication/auth_check.php';
   include ROOT_PATH . '/data_flow/interaction_storage.php';
   include ROOT_PATH . '/data_flow/dgi_req.php';
 
+  if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    exit('Method Not Allowed');
+  }
+
+  // generate new gene drug pipeline
+  $conn = get_connection();
+  $pipeline = new GeneDrugDataPipeline($conn);
+
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $gene = $_POST['gene'];
-    $drug = $_POST['drug'];
-    dgi_db_req($gene, $drug);
+    $gene = $_POST['gene'] ?? '';
+    $drug = $_POST['drug'] ?? '';
+
+    // retrieve the API stuff
+    $payload = dgi_db_req($gene, $drug);
+
+    if (!$payload) {
+      http_response_code(405);
+      exit('Returned Empty Array');
+    }
+
+    // insert into 
+    $pipeline->insertRelations($payload);
   }
 ?>
 

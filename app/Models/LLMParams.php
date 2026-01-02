@@ -1,25 +1,24 @@
 <?php
-  /**
-   * llm_params.php: LLM Prompt Engineering	Technique
-   * Author: Evan
-   * 
-   * Imported by llm_request.php
-   * Contains the prompt engineering parameters for the LLM
-   */
-	
-
-  /* --------------------------------------------------------------
-    Generals Params 
-  -------------------------------------------------------------- */
-	$temperature = 0.6;
-	$model = 'gpt-4.1-nano-2025-04-14';
-  $api_key = getenv('OPENAI_API_KEY');
+/**
+ * llm_params.php: LLM Prompt Engineering	Technique
+ * Author: Evan
+ * 
+ * Imported by llm_request.php
+ * Contains the prompt engineering parameters for the LLM
+ */
 
 
+namespace App\Models;
+
+class LLMParams {
+
+  private static $model = 'gpt-4.1-nano-2025-04-14';
+  private static float $temperature = 0.6;
+  
   /* --------------------------------------------------------------
     Prompt Text
   -------------------------------------------------------------- */
-  $report_system="
+  private static string $report_system="
     You are an expert clinicalian with a reliable knowledge in genetic relations
     between drugs. You only give accurate medical explanations according to the literature
     and you cite real diagnostic criteria and biological mechanisms when relevant. 
@@ -70,8 +69,7 @@
     Output should be for the report only
   ";
 
-  // Example Assistant Answer
-  $report_assistant = `
+  private static string $report_assistant = `
     <h2>Overview</h2> 
     <p>EGFR (Epidermal Growth Factor Receptor) encodes a transmembrane receptor tyrosine kinase located on chromosome 7p11.2. 
     It is involved in regulating cell proliferation, survival, differentiation, and migration. Upon binding its ligands, such as EGF or TGF-α, 
@@ -108,19 +106,26 @@
     <p>Li, S. et al., “EGFR-targeted monoclonal antibodies in cancer therapy,” Clinical Cancer Research 2018 — <a href="https://clincancerres.aacrjournals.org/content/24/15/3347">https://clincancerres.aacrjournals.org/content/24/15/3347</a></p>
   `;
 
+  /**
+   * @var array
+   * Prompt Engineering strategy for llm. Upon user request to ask LLM about the given data,
+   * The LLM is conditioned using these queries to minimise hallucination
+   * Upon user request to ask LLM 
+   * 
+   * "user", "assistant", "system"
+   */
+  private static string $user_chat_system_text = `
+  As a biomedical expert, you will then respond to users asking queries pertaining to the report you produced, and the 
+  previously described drug gene relationships. Respond to the users questions with your knowledge, producing a paragraph response.
+  You only give a pure text output, do NOT include any html elements. You only cite links you were given in previous inputs.
+  You only respond to queries within a BIOMEDICAL context. You link back to your report when you can
+`;
 
-  $user_chat_system_text = `
-    As a biomedical expert, you will then respond to users asking queries pertaining to the report you produced, and the 
-    previously described drug gene relationships. Respond to the users questions with your knowledge, producing a paragraph response.
-    You only give a pure text output, do NOT include any html elements. You only cite links you were given in previous inputs.
-    You only respond to queries within a BIOMEDICAL context. You link back to your report when you can
-  `;
-
-  $user_chat_user_text = `
+  private static string $user_chat_user_text = `
     Tell me more about Gefitinib, and it's current use in the medical domain.
   `;
 
-  $user_chat_assistant_text = `
+  private static string $user_chat_assistant_text = `
     Gefitinib is a first-generation tyrosine kinase inhibitor (TKI) that selectively targets the intracellular ATP-binding
     domain of the Epidermal Growth Factor Receptor (EGFR). By blocking EGFR signalling, it inhibits downstream
     pathways such as MAPK/ERK and PI3K/AKT, which are crucial for cell proliferation and survival. 
@@ -132,53 +137,97 @@
   `;
 
   /* --------------------------------------------------------------
-    Package Prompts 
-  -------------------------------------------------------------- */
+    Prompt Builders
+  -------------------------------------------------------------- */ 
+  public static function make_user_query_prompt($user_query): string {
+    $query_string = "
+      As a biomedical and clinical expert, pretend you will be asked a user
+      submitted query concerning data your report has generated. Return a concise,
+      1 paragraph explanation to the user submitted query, looking online and providing
+      relevant readings ONLY if it can be found. 
+      explanation in response to a user submitted query. Ensure question is relevant
+      to your position as an expert. Give only the answer to the user query in your response.
 
-	/**
-	 * @var array
-   * Prompt Engineering strategy for llm. Upon user request to ask LLM about the given data,
-   * The LLM is conditioned using these queries to minimise hallucination
-	 * Upon user request to ask LLM 
-   * 
-   * "user", "assistant", "system"
-	 */
-  $initialisation_prompts = [
-    [
-      "role" => "system",
-      "content" => [
-        ["type" => "text", "text" => $report_system]
-      ]
-    ],
-    [
-      "role" => "assistant",
-      "content" => [
-        ["type" => "text", "text" => $report_assistant]
-      ]
-    ]
-  ];
+      The user query is: 
+    " . $user_query;
 
-  $user_chat_system = [
-    "role" => "system",
-    "content" => [
-      ["type" => "text", "text" => $user_chat_system_text]
-    ]
+    return $query_string;
+  }
+
+  /**
+   * Parses Query Data into a string input used to send to ChatGPT
+   * @param array $query_data
+   * @return string
+   */
+  public static function make_report_prompt(array $query_data): string {
+    
+    $prompt_string = "Generate a report for the following interactions using the mentioned structure. The queries are as follows: \n";
+
+    $query_string = '';
+    foreach ($query_data as $entry) {
+      $gene = $entry['gene'] ?? '';
+      $drug = $entry['drug'] ?? '';
+      $relation_type = $entry['relation'] ?? '';
+      $note = $entry['notes'] ?? '';
+      $source = $entry['source'] ?? '';
+
+      $query_string .= "Gene: $gene, Drug: $drug, Relation Type: $relation_type, Sources $source, Additional Notes: $note\n";
+    }
+
+    return $prompt_string . $query_string;
+  }
+
+
+  /* --------------------------------------------------------------
+    Getters
+  -------------------------------------------------------------- */ 
+  public static function getModel(): string {
+    return self::$model;
+  }
+
+  public static function getTemperature() {
+    return self::$temperature;
+  }
+
+  public static function getOpenAIKey() {
+    return getenv('OPENAI_API_KEY');
+  }
+
+  public static function getInitialisationPrompts() {
+    return [
+      [
+        "role" => "system",
+        "content" => [ ["type" => "text", "text" => self::$report_system] ]
+      ],
+      [
+        "role" => "assistant",
+        "content" => [ ["type" => "text", "text" => self::$report_assistant] ]
+      ]
     ];
+  }
 
-  $user_chat_user = [
-    "role" => "system",
-    "content" => [
-      ["type" => "text", "text" => $user_chat_user_text]
-    ]
-  ];
+  public static function getUserChatSystem() {
+    return [
+      "role" => "system",
+      "content" => [ ["type" => "text", "text" => self::$user_chat_system_text] ]
+    ];
+  }
 
-  $user_chat_assistant = [
-    "role" => "system",
-    "content" => [
-      ["type" => "text", "text" => $user_chat_assistant_text]
-    ]
-  ];
+  public static function getUserChatUser() {
+  return [
+      "role" => "system",
+      "content" => [ ["type" => "text", "text" => self::$user_chat_user_text] ]
+    ];
+  }
+  
+  public static function getUserChatAssistant() {
+    return [
+      "role" => "system",
+      "content" => [ ["type" => "text", "text" => self::$user_chat_assistant_text] ]
+    ];
+  }
+}
 
 
 
-?>
+

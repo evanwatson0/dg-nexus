@@ -36,42 +36,13 @@ require ROOT_PATH . '/authentication/auth_check.php';
         Where user enters gene,drug, relation type to search database
         You have the option to generate an LLM Report as well 
         -->
+        <?php include ROOT_PATH . '/pages/elements/search_form.php' ?>
 
-        <form id="search-form" class="card" method="POST">
-            <div>
-                <label for="gene">Gene</label>
-                <input type="text" id="gene" name="gene" placeholder="e.g., CYP2D6" />
-            </div>
-            <div>
-                <label for="drug">Drug</label>
-                <input type="text" id="drug" name="drug" placeholder="e.g., Fluoxetine" />
-            </div>
 
-            <div>
-                <label for="relation_type">Relation type</label>
-                <select id="relation_type" name="relation_type">
-                    <option value="">— Any —</option>
-                    <option value="inhibitor">Inhibitor</option>
-                    <option value="upregulator">Upregulator</option>
-                    <option value="snp_specific">SNP-specific response</option>
-                    <option value="vaccine">Vaccine</option>
-                    <option value="negative modulator">Negative modulator</option>
-                </select>
-            </div>
 
-            <div>
-                <label for="want_llm">LLM Report</label>
-                <select id="want_llm" name="want_llm">
-                    <option value="no">No</option>
-                    <option value="yes">Yes</option>
-                </select>
-            </div>
 
-            <div class="full btns">
-                <button type="submit" name="action" value="query">Search</button>
-            </div>
-        </form>
 
+        
         <!-- Interaction Search Status
         This holds the text for the Status output of the Interaction Search  
         It can say Loading, Error, or Done 
@@ -175,7 +146,7 @@ require ROOT_PATH . '/authentication/auth_check.php';
 
     <!-- jsPDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script type="module" src="app.js" defer></script>
+    <script type="module" src="../app.js" defer></script>
 
 </body>
 </html>
