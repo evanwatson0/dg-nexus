@@ -15,7 +15,7 @@ export async function generateLLMReport(rows, sessionId) {
         session_id: sessionId
     });
 
-    const resp = await fetch('/api/llm/report', {
+    const resp = await fetch('/api/llm/report/create', {
         method: 'POST',
         body: payload
     });
@@ -56,6 +56,13 @@ export async function submitLLMFeedback(responseId, rating, isHelpful, feedbackT
     return resp.json();
 }
 
+export async function getMostRecentReport() {
+    const resp = await fetch('/api/llm/report/get', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    });
+}
 
 export async function retrieveGDInteractions(gene,drug,relation_type) {
     const payload = {

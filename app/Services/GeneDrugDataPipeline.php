@@ -4,13 +4,16 @@ namespace App\Services;
 
 use mysqli;
 
+require ROOT_PATH . '/config/db_connect.php';
+
+
 class GeneDrugDataPipeline
 {
     private mysqli $conn;
 
-    public function __construct(mysqli $conn)
+    public function __construct()
     {
-        $this->conn = $conn;
+        $this->conn = get_connection();
     }
 
     // /**

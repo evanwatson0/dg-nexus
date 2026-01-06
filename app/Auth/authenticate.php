@@ -3,11 +3,12 @@
 use App\Controllers\SessionController;
 // authenticate.php
 // Deteremines whether active user/pass is an actual user that has been registered or not
-require_once __DIR__ . '/../bootstrap.php';
-require ROOT_PATH . 'app/Auth/session_config.php';
-require ROOT_PATH . '/db_connect.php';
+require_once __DIR__ . '/../../bootstrap.php';
+// require ROOT_PATH . 'app/Auth/session_config.php';
+// require ROOT_PATH . 'app/Auth/session_config.php';
+require ROOT_PATH . '/config/db_connect.php';
 
-$cont = new SessionController(get_connection());
+$cont = new SessionController();
 
 $email = $_POST['email'] ?? '';
 $password = $_POST['password'] ?? '';

@@ -80,6 +80,7 @@ namespace App\Services;
 
 require_once __DIR__ . '/../../bootstrap.php';
 require ROOT_PATH . '/app/Models/OpenAIParams.php';
+require ROOT_PATH . '/config/db_connect.php';
 
 use App\Models\LLMParams;
 use mysqli;
@@ -91,14 +92,16 @@ class LLMDataPipeline
     private int $current_session_id;
 
     private $chat_history;
+
+    private $recentReport;
   
 
 
 
     // TODO: create SESSION when Constructing LLMDataPipeline
-    public function __construct(mysqli $conn)
+    public function __construct()
     {
-      $this->conn = $conn;
+      $this->conn = get_connection();
       $this->chat_history = LLMParams::getInitialisationPrompts();
     }
 
@@ -167,7 +170,16 @@ class LLMDataPipeline
         $prompt_id = $this->insertPrompt($prompt_string);
         $this->insertResponse($prompt_id, $llm_response);
 
+        $this->recentReport = $llm_response;
         return $llm_response;
+    }
+
+    // TODO: change it to use SQL instead
+    public function getMostRecentReport(): string {
+        // $stmt = $this->conn->prepare(
+        //     'SELECT * FROM Report '
+        // )
+        return $this->recentReport;
     }
 
 

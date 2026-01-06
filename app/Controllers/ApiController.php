@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Services\GeneDrugDataPipeline;
 use App\Services\LLMDataPipeline;
+require ROOT_PATH . '/config/db_connect.php';
 
 class ApiController
 {
@@ -77,6 +78,10 @@ class ApiController
             'data' => $response['text'],
             'response_id' => $response['id']
         ]);
+    }
+
+    public function getMostRecentReport(): string {
+        return $this->llmPipeline->getMostRecentReport();
     }
 
     public function userLLMChat()

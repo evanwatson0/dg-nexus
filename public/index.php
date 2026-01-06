@@ -7,7 +7,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../bootstrap.php';
-require ROOT_PATH . '/authentication/auth_check.php';
+require ROOT_PATH . '/app/auth/auth_check.php';
 
 use App\Controllers\ApiController;
 

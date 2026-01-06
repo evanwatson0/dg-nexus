@@ -25,6 +25,22 @@ let currentReportResponseId = null;
 // 前端暫存最近一次的結構化結果，給 Save to DB 用
 let lastStructured = [];
 
+/**GPT */
+const tabs = document.querySelectorAll('.tab');
+const contents = document.querySelectorAll('.tab-content');
+
+tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        contents.forEach(c => c.classList.remove('active'));
+
+        tab.classList.add('active');
+        document
+            .getElementById(`tab-${tab.dataset.tab}`)
+            .classList.add('active');
+    });
+});
+
 
 
 /* --------------------------------------------------------------
@@ -32,12 +48,15 @@ let lastStructured = [];
     Author: Claire
 -------------------------------------------------------------- */
 const form = document.getElementById('gene-drug-search-form');
-const statusEl = document.getElementById('status');
-const tableEl = document.getElementById('table');
-const llmEl = document.getElementById('llm');
+
 
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
+
+    
+    const statusEl = document.getElementById('status');
+    const llmEl = document.getElementById('llm');
+
 
     statusEl.textContent = 'Searching...';
     const fd = new FormData(form);

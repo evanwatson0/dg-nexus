@@ -4,12 +4,15 @@ namespace App\Controllers;
 
 use mysqli;
 
+
+require ROOT_PATH . '/config/db_connect.php';
+
 class SessionController
 {
 
     private mysqli $conn;
 
-    public function __construct(mysqli $conn)
+    public function __construct($conn)
     {
         $this->conn = $conn;
     }

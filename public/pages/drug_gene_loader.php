@@ -1,9 +1,9 @@
 <?php
 
 use App\Services\GeneDrugDataPipeline;
-  require_once __DIR__ . '/../bootstrap.php';
+  require_once __DIR__ . '/../../bootstrap.php';
 
-  require ROOT_PATH . '/authentication/auth_check.php';
+  require ROOT_PATH . '/app/auth/auth_check.php';
   include ROOT_PATH . '/data_flow/interaction_storage.php';
   include ROOT_PATH . '/data_flow/dgi_req.php';
 
