@@ -8,11 +8,13 @@ export async function createLLMSession() {
     return resp.json();
 }
 
-export async function generateLLMReport(rows, sessionId) {
+export async function generateLLMReport(input, type, relation_type, rows) {
     const payload = new URLSearchParams({
         query: JSON.stringify(rows),
-        query_type: 'report',
-        session_id: sessionId
+        input: input,
+        type: type,
+        relation_type: relation_type,       
+
     });
 
     const resp = await fetch('/api/llm/report/create', {
@@ -23,11 +25,10 @@ export async function generateLLMReport(rows, sessionId) {
     return resp.json();
 }
 
-export async function sendLLMChat(userQuery, sessionId) {
+export async function sendLLMChat(userQuery) {
     const payload = new URLSearchParams({
         query: JSON.stringify({ user_query: userQuery }),
         query_type: 'user_chat',
-        session_id: sessionId,
         reset: 'false'
     });
 
@@ -39,22 +40,24 @@ export async function sendLLMChat(userQuery, sessionId) {
     return resp.json();
 }
 
-export async function submitLLMFeedback(responseId, rating, isHelpful, feedbackText) {
-    const payload = {
-        response_id: responseId,
-        rating,
-        is_helpful: isHelpful,
-        feedback_text: feedbackText
-    };
 
-    const resp = await fetch('/api/llm/feedback', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-    });
 
-    return resp.json();
-}
+// export async function submitLLMFeedback(responseId, rating, isHelpful, feedbackText) {
+//     const payload = {
+//         response_id: responseId,
+//         rating,
+//         is_helpful: isHelpful,
+//         feedback_text: feedbackText
+//     };
+
+//     const resp = await fetch('/api/llm/feedback', {
+//         method: 'POST',
+//         headers: { 'Content-Type': 'application/json' },
+//         body: JSON.stringify(payload)
+//     });
+
+//     return resp.json();
+// }
 
 export async function getMostRecentReport() {
     const resp = await fetch('/api/llm/report/get', {
@@ -64,12 +67,23 @@ export async function getMostRecentReport() {
     });
 }
 
-export async function retrieveGDInteractions(gene,drug,relation_type) {
+export async function retrieveGDInteractions(input, search_type, relation_type) {
+    let gene, drug;
+    if (search_type === 'gene') {
+        gene = input;
+        drug = "";
+    } else if (search_type === 'drug') {
+        gene = "";
+        drug = input;
+    } else {
+        throw Error("Search Type is neither drug nor gene" + search_type);
+    }
+
+
     const payload = {
-        gene: g,
-        rating,
-        is_helpful: isHelpful,
-        feedback_text: feedbackText
+        gene: gene,
+        drug: drug, 
+        relation_type: relation_type
     };
 
     const resp = await fetch('/api/llm/feedback', {
@@ -78,5 +92,5 @@ export async function retrieveGDInteractions(gene,drug,relation_type) {
         body: JSON.stringify(payload)
     });
 
-    return resp.json();
+    return resp.text();
 }

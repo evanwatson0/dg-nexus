@@ -6,7 +6,7 @@ use mysqli;
 
 require ROOT_PATH . '/config/db_connect.php';
 
-class SessionController
+class LoginController
 {
     private mysqli $conn;
 

@@ -16,8 +16,8 @@ class ApiController
     public function __construct()
     {
         $this->conn = get_connection();
-        $this->geneDrugPipeline = new GeneDrugDataPipeline($this->conn);
-        $this->llmPipeline = new LLMDataPipeline($this->conn);
+        $this->geneDrugPipeline = new GeneDrugDataPipeline();
+        $this->llmPipeline = new LLMDataPipeline();
     }
 
     /* -------------------- Interactions -------------------- */

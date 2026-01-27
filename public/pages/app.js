@@ -1,196 +1,106 @@
-import { mdToPdfSelectable } from './elements/pdf_convert.js';
-
-// const saveBtn = document.getElementById('save-btn');
-const saveLlmBtn = document.getElementById('save-llm-btn');
-const svg = document.getElementById('graph');
-
-// LLM chat features
-const llmChatForm = document.getElementById('llm-chat-form');
-const llmChatBtn = document.getElementById('llm-chat-button');
-const llmChatInput = document.getElementById('llm-chat-input');
-const llmQueryField = document.getElementById('llm-chat-response-section');
-
-// Feedback Button
-const feedbackButton = document.getElementById('feedback-submit');
+import { generateLLMReport, retrieveGDInteractions, sendLLMChat } from '../rest.js';
+import { mdToPdfSelectable } from './helpers/pdf_convert.js';
 
 
-// Contains the real updated LLM Text
+
+let lastStructured = [];
+let gdiSearchFormData;
 let previousLLMText = "";
 
-// Automatically generate new session upon a new Search of the database
-let currentSessionID = null;
-let currentReportResponseId = null;
-
-
-// 前端暫存最近一次的結構化結果，給 Save to DB 用
-let lastStructured = [];
-
-/**GPT */
-const tabs = document.querySelectorAll('.tab');
-const contents = document.querySelectorAll('.tab-content');
-
-tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-        tabs.forEach(t => t.classList.remove('active'));
-        contents.forEach(c => c.classList.remove('active'));
-
-        tab.classList.add('active');
-        document
-            .getElementById(`tab-${tab.dataset.tab}`)
-            .classList.add('active');
-    });
-});
-
+const generateLLMButton = document.addEventListener('generate-llm-btn');
+const saveLLMButton = document.addEventListener('save-llm-btn');
 
 
 /* --------------------------------------------------------------
     Listener: Gene, Drug, Interaction Submission Form
-    Author: Claire
+    Author: Evan
 -------------------------------------------------------------- */
-const form = document.getElementById('gene-drug-search-form');
+const gdiSearchForm = document.getElementById('gdi-search-form');
 
-
-form.addEventListener('submit', async (e) => {
+gdiSearchForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    const gdiStatus = document.getElementById('status');
+    gdiStatus.textContent = 'Searching...';
+
+    // retrieve them using function
+    gdiSearchFormData = new FormData(gdiSearchForm);
     
-    const statusEl = document.getElementById('status');
-    const llmEl = document.getElementById('llm');
-
-
-    statusEl.textContent = 'Searching...';
-    const fd = new FormData(form);
-    
-    // Retrieve data from SQL Database
-    // 送往後端檔案：interaction_retrieval.php
-    // 後端建議接收：$_POST['gene'], $_POST['drug'], $_POST['relation_type']
-    let interactionsRaw;
-    let data;
     try {
-        const resp = await fetch('../data_flow/interaction_retrieval.php', { 
-            method: 'POST', 
-            body: fd 
-        });
-
-        // Get the Raw Text
-        interactionsRaw = await resp.text();
-
-        // attempt to Parse the JSON
-        const ret = JSON.parse(interactionsRaw);
-        data = ret["data"]
-    } catch (err) {
-        console.error("JSON parse error:", err);
-        console.error("RAW RESPONSE:", interactionsRaw);
-        statusEl.textContent = "Response is not valid JSON. See console for details.";
-        return;
-    }
-
-    // 嘗試把任意形狀的資料轉成表格列
-    const rows = normaliseToRows(data);
-    lastStructured = rows;
-    renderTable(rows);
-    renderMiniGraph(rows);
-
-
-    // Continue Input Only If User Wants LLM report
-    if (fd.get('want_llm') !== 'yes') {
-        llmEl.textContent = 'Not Selected';
-        statusEl.textContent = 'Done';
-
-        saveLlmBtn.disabled = true;
-        return;   
-    }
-
-
-    // CREATE NEW USER SESSION
-    let identifierRaw;
-    try {
-        // const fd2 = new FormData();
-        // fd2.append("action", "create_session");
-        // fd2.append("user_identifier", null);
-
-        const payload = {
-            action: "create_session",
-            user_identifier: null
-        }
-
-        const resp2 = await fetch("../llm/llm_chat_storage.php", {
-            method: "POST",
-            body: JSON.stringify(payload)
-        });
-
-        identifierRaw = await resp2.text();
-        const identifierJSON = JSON.parse(identifierRaw);
-
-        currentSessionID = identifierJSON['id'];
-
-    } catch (err) {
-        console.error('Error creating user session:', err);
-        console.error('RAW RESPONSE:', identifierRaw);
-        return;
-    }
-
-
-    // SEND DATA TO LLM (llm_request.php)
-    // 若選擇要 LLM 報告，額外呼叫 llm_request.php
-    let llmText = null;
-    let llmRespRaw;
-    try {
-
-        const llmPayload = new URLSearchParams({
-            gene: fd.get('gene') || '',
-            drug: fd.get('drug') || '',
-            relation_type: fd.get('relation_type') || '',
-            // append all interactions as arguments for the LLM also
-            query: JSON.stringify(rows),
-            query_type: 'report',
-            session_id: currentSessionID
-        });
-        const llmResp = await fetch('../llm/llm_request.php', { method: 'POST', body: llmPayload });
-        
-        const llmRespRaw = await llmResp.text(); // 也可能是 JSON，看你們後端決定
-        const llmRespJSON = JSON.parse(llmRespRaw);
-        llmText = llmRespJSON['data'];
-        currentReportResponseId = llmRespJSON['response_id'];
+        const searchRespRaw = retrieveGDInteractions(gdiSearchFormData.get('input'), gdiSearchForm.get('gene_or_drug'), gdiSearchFormData.get('relation_type'));
+        const searchRespJSON = JSON.parse(searchRespRaw);
     } catch (err) {
         console.error('Error sending to llm_request.php:', err);
         console.error("RAW RESPONSE:", llmRespRaw);
         return;
     }
 
+    data = searchRespJSON["data"];
+    const rows = normaliseToRows(data);
+
+
+    lastStructured = rows;
+    renderTable(rows);
+    renderMiniGraph(rows);
+
+    // make llm button unmutted
+    generateLLMButton.disabled = false;
+});
+
+
+
+/* --------------------------------------------------------------
+    Listener: Gemerate LLM Report upon Button Press 
+    Author: Evan
+-------------------------------------------------------------- */
+let prevReportResponseID;
+generateLLMButton.addEventListener('submit', async(e) => {
+    
+    const llmReportOutput = document.getElementById('llm-report-output');
+
+    try {
+        const reportRespRaw = generateLLMReport(gdiSearchFormData.get('input'), gdiSearchForm.get('gene_or_drug'), gdiSearchFormData.get('relation_type'), lastStructured, sessionID);
+        const reportRespJSON = JSON.parse(reportRespRaw);
+    } catch (err) {
+        console.error('Error generating llm report:', err);
+        console.error("RAW RESPONSE:", llmRespRaw);
+        return;
+    }
+
+
+
+    let llmText = reportRespJSON['data'];
+    prevReportResponseID = reportRespJSON['response_id'];
+
     // Update previous text on frontend, and store copy 
     // if user wants to save the report
-    llmEl.textContent = llmText || 'No LLM text received';
+    llmReportOutput.textContent = llmText || 'No LLM Text Received';
     previousLLMText = llmText;
+
 
     // Once an LLM report is generated, only then can the User
     // SAVE the LLM report, discuss the results and give feedback 
-    saveLlmBtn.disabled = !llmText; 
-    llmChatBtn.disabled = !llmText;
-    feedbackButton.disabled = !llmText;
-
-    statusEl.textContent = 'Done';
-
+    saveLLMButton.disabled = false;
 });
-
 
 
 /* --------------------------------------------------------------
     Listener: Save Button for the LLM Report 
     Author: Evan
 -------------------------------------------------------------- */
-saveLlmBtn.addEventListener('click', async () => {
-
+saveLLMButton.addEventListener('submit', async (e) => {
     const text = previousLLMText.trim();
-    await mdToPdfSelectable(text, 'output.pdf', 'Report', 'styling/logo.png');
-
+    await mdToPdfSelectable(text, 'output.pdf', 'Report', 'styling/logo,png');
 });
 
 
+
 /* --------------------------------------------------------------
-    Listener: Discuss w/ AI Asssistant Button 
+    Listener: Save Button for the LLM Discussion
     Author: Evan
 -------------------------------------------------------------- */
+const llmChatForm = document.getElementById('llm-chat-form');
+const llmResponseField = document.getElementById('llm-chat-response-section');
 
 llmChatForm.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -199,64 +109,14 @@ llmChatForm.addEventListener("submit", async (e) => {
     // get the text
     const fd = new FormData(llmChatForm);
 
-    let llmText;
-
     try {
-        const llmPayload = new URLSearchParams({
-            query: JSON.stringify({user_query: fd.get('llm-chat-input')}),
-            query_type: 'user_chat',
-            session_id: currentSessionID,
-            reset: 'false'
-        });
+        const llmRespRaw = sendLLMChat(fd.get('llm-chat-input'));
+        const llmRespJSON = JSON.parse(llmRespRaw);
 
-        const llmResp = await fetch('../llm/llm_request.php', { method: 'POST', body: llmPayload });
-        const llmResRaw = await llmResp.text(); // 也可能是 JSON，看你們後端決定
-        const llmResJson = JSON.parse(llmResRaw);
-
-        llmQueryField.textContent = llmResJson['data'] || 'No LLM text received';
-
+        llmResponseField.textContent = llmRespJSON['data'] || 'No LLM text received';
     } catch (err) {
-        console.error("Error:", err);
-        console.error("RAW RESPONSE:", llmText);
-        llmQueryField.textContent = "Response is not valid JSON. See console for details.";
-    }
-
-
-});
-
-
-/* --------------------------------------------------------------
-    Listener: User Feedback Form Submission
-    Authors: Claire, Evan
--------------------------------------------------------------- */
-
-const feedbackForm = document.getElementById('user-feedback');
-const feedbackStatus = document.getElementById('feedback-status');
-feedbackForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    let fd = new FormData(feedbackForm);
-    try {
-        const payload = {
-            action: "add_feedback",
-            response_id: currentReportResponseId,
-            rating: fd.get('feedback-rating'),
-            is_helpful: fd.get('feedback-rating'),
-            feedback_text: fd.get('feedback-comment')
-        }
-
-        const resp2 = await fetch("../llm/llm_chat_storage.php", {
-            method: "POST",
-            body: JSON.stringify(payload)
-        });
-        feedbackStatus.textContent = "Uploaded Feedback!"
-    } catch (err) {
-        console.log('error feedback from', err);
+        console.error('Error generating llm discussion:', err);
+        console.error("RAW RESPONSE:", llmRespRaw);
         return;
     }
-
-
 });
-
-
-

@@ -19,7 +19,7 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 $controller = new ApiController();
 
-// Simple router
+// Simple router - make one to switch via v1 (REGEX)
 switch (true) {
 
     /* -------------------- Interactions -------------------- */

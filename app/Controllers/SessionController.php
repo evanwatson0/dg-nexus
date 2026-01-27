@@ -12,9 +12,9 @@ class SessionController
 
     private mysqli $conn;
 
-    public function __construct($conn)
+    public function __construct()
     {
-        $this->conn = $conn;
+        $this->conn = get_connection();
     }
     
 
