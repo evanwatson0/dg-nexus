@@ -1,5 +1,5 @@
 import { generateLLMReport, retrieveGDInteractions, sendLLMChat } from '../rest.js';
-import { mdToPdfSelectable } from './helpers/pdf_convert.js';
+import { mdToPdfSelectable } from './assets/js/pdf_convert.js';
 
 
 
@@ -7,8 +7,8 @@ let lastStructured = [];
 let gdiSearchFormData;
 let previousLLMText = "";
 
-const generateLLMButton = document.addEventListener('generate-llm-btn');
-const saveLLMButton = document.addEventListener('save-llm-btn');
+const generateLLMButton = document.getElementById('generate-llm-btn');
+const saveLLMButton = document.getElementById('save-llm-btn');
 
 
 /* --------------------------------------------------------------
@@ -20,14 +20,14 @@ const gdiSearchForm = document.getElementById('gdi-search-form');
 gdiSearchForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const gdiStatus = document.getElementById('status');
+    const gdiStatus = document.getElementById('gdi-search-status');
     gdiStatus.textContent = 'Searching...';
 
     // retrieve them using function
     gdiSearchFormData = new FormData(gdiSearchForm);
     
     try {
-        const searchRespRaw = retrieveGDInteractions(gdiSearchFormData.get('input'), gdiSearchForm.get('gene_or_drug'), gdiSearchFormData.get('relation_type'));
+        const searchRespRaw = retrieveGDInteractions(gdiSearchFormData.get('input'), gdiSearchFormData.get('gene_or_drug'), gdiSearchFormData.get('relation_type'));
         const searchRespJSON = JSON.parse(searchRespRaw);
     } catch (err) {
         console.error('Error sending to llm_request.php:', err);

@@ -9,9 +9,9 @@ require_once __DIR__ . '/../../bootstrap.php';
     <meta charset="UTF-8">
     <title>DG Nexus</title>
 
-    <link rel="stylesheet" href="styling/backbone.css">
-    <link rel="stylesheet" href="styling/header.css">
-    <link rel="stylesheet" href="styling/dashboard.css">
+    <link rel="stylesheet" href="assets/css/backbone.css">
+    <link rel="stylesheet" href="assets/css/header.css">
+    <link rel="stylesheet" href="assets/css/user_page.css">
 
     <style>
         /* Simple tab styling */
@@ -46,7 +46,7 @@ require_once __DIR__ . '/../../bootstrap.php';
 
     <main>
 
-        <img src="styling/logo.png" class="center-img" alt="Centered">
+        <img src="assets/images/logo.png" class="center-img" alt="Centered">
         <p class="muted">Enter a gene or drug and choose the interaction type. You can fill either field.</p>
         
         <!-- Search Form -->

@@ -159,9 +159,9 @@ class LLMParams {
    * @param array $query_data
    * @return string
    */
-  public static function make_report_prompt(array $query_data): string {
+  public static function make_report_prompt(array $query_data, string $input, string $type, string $relation_type): string {
     
-    $prompt_string = "Generate a report for the following interactions using the mentioned structure. The queries are as follows: \n";
+    $prompt_string = "Generate a report for the " . $type . ", " . $input . "The queries are as follows: \n";
 
     $query_string = '';
     foreach ($query_data as $entry) {

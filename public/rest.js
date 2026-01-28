@@ -1,29 +1,83 @@
+
+/* --------------------------------------------------------------
+    Listener: Save Button for the LLM Report 
+    Author: Evan
+-------------------------------------------------------------- */
+
 export async function createLLMSession() {
-    const resp = await fetch('/api/llm/session/create', {
+    const resp = await fetch('v2/api/session/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user_identifier: null })
+        
     });
 
-    return resp.json();
+    return resp.text();
 }
 
+/**
+ * May need to have a body argument for the Session Identifier
+ */
+export async function getLLMSession(sessionName) {
+    const payload = {
+        session_name: sessionName
+    }
+    const resp = await fetch('v2/api/session', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    });
+
+    return resp.text();
+}
+
+
+export async function endLLMSession() {
+    const resp = await fetch('v2/api/session/update', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        
+    });
+
+    return resp.text();
+}
+
+export async function deleteLLMSession() {
+    const resp = await fetch('v2/api/session/delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        
+    });
+
+    return resp.text();
+}
+
+
+
+/* --------------------------------------------------------------
+    Listener: Create LLM Report 
+    Author: Evan
+-------------------------------------------------------------- */
 export async function generateLLMReport(input, type, relation_type, rows) {
-    const payload = new URLSearchParams({
-        query: JSON.stringify(rows),
+    const payload = {
+        query: rows,
         input: input,
         type: type,
         relation_type: relation_type,       
 
-    });
+    };
 
-    const resp = await fetch('/api/llm/report/create', {
+    const resp = await fetch('v2/api/llm/report', {
         method: 'POST',
-        body: payload
+        body: JSON.stringify(payload)
     });
 
-    return resp.json();
+    return resp.text();
 }
+
+
+
+
+
 
 export async function sendLLMChat(userQuery) {
     const payload = new URLSearchParams({
@@ -32,12 +86,12 @@ export async function sendLLMChat(userQuery) {
         reset: 'false'
     });
 
-    const resp = await fetch('/api/llm/chat', {
+    const resp = await fetch('v2/api/llm/chat', {
         method: 'POST',
         body: payload
     });
 
-    return resp.json();
+    return resp.text();
 }
 
 
@@ -60,11 +114,12 @@ export async function sendLLMChat(userQuery) {
 // }
 
 export async function getMostRecentReport() {
-    const resp = await fetch('/api/llm/report/get', {
+    const resp = await fetch('v2/api/llm/report/get', {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
     });
+
+    return resp.text();
 }
 
 export async function retrieveGDInteractions(input, search_type, relation_type) {
@@ -86,8 +141,8 @@ export async function retrieveGDInteractions(input, search_type, relation_type) 
         relation_type: relation_type
     };
 
-    const resp = await fetch('/api/llm/feedback', {
-        method: 'POST',
+    const resp = await fetch('v2/api/query', {
+        method: 'GET',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
     });

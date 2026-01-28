@@ -22,20 +22,21 @@ class ApiController
 
     /* -------------------- Interactions -------------------- */
 
-    // public function queryInteractions()
-    // {
-    //     $data = $_POST;
-    //     $gene = $data['gene'] ?? '';
-    //     $drug = $data['drug'] ?? '';
-    //     $relation_type = $data['relation_type'] ?? '';
+    public function queryInteractions()
+    {
+        $data = $_POST;
+        $gene = $data['gene'] ?? '';
+        $drug = $data['drug'] ?? '';
+        $relation_type = $data['relation_type'] ?? '';
 
-    //     $results = $this->geneDrugPipeline->queryDb($gene, $drug, $relation_type);
+        $results = $this->geneDrugPipeline->retrieveRelations($gene, $drug, $relation_type);
 
-    //     echo json_encode([
-    //         'success' => true,
-    //         'data' => $results
-    //     ]);
-    // }
+
+        echo json_encode([
+            'success' => true,
+            'data' => $results
+        ]);
+    }
 
     // public function syncInteractions()
     // {
@@ -69,9 +70,19 @@ class ApiController
         $query_json = $_POST['query'] ?? '';
         $query_data = json_decode($query_json, true);
 
+        $input = $_POST['input'] ?? Null;
+        $type = $_POST['type'] ?? Null;
+        $relation_type = $_POST['relation_type'] ?? '';
+        
+        if (!$input || !$type) {
+            echo json_encode([
+            'success' => false,
+            'data' => Null,
+            'response_id' => Null
+        ]);
+        }
 
-
-        $response = $this->llmPipeline->generateReport($query_data);
+        $response = $this->llmPipeline->generateReport($query_data, $input, $type, $relation_type);
 
         echo json_encode([
             'success' => true,

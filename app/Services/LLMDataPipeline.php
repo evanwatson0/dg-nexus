@@ -149,9 +149,9 @@ class LLMDataPipeline
     /* --------------------------------------------------------------
        LLM request
     -------------------------------------------------------------- */
-    public function generateReport($query_data): string {
+    public function generateReport($query_data, $input, $type, $relation_type): string {
 
-        $prompt_string = LLMParams::make_report_prompt($query_data);
+        $prompt_string = LLMParams::make_report_prompt($query_data, $input, $type, $relation_type);
 
         $this->chat_history[] = [
             "role" => "user",

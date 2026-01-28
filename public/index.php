@@ -20,29 +20,54 @@ $method = $_SERVER['REQUEST_METHOD'];
 $controller = new ApiController();
 
 // Simple router - make one to switch via v1 (REGEX)
+// Controller Echoes json_encodes
 switch (true) {
 
-    /* -------------------- Interactions -------------------- */
-
-    /* -------------------- LLM -------------------- */
-    case $uri === '/api/llm/session/create' && $method === 'POST':
+    /* -------------------- Session -------------------- */
+    case $uri === 'v2/api/session/create' && $method === 'POST':
         $controller->createLLMSession();
         break;
 
+    case $uri === 'v2/api/session' && $method === 'GET':
 
-    case $uri === '/api/llm/report' && $method === 'POST':
-        
-
-        $controller->generateLLMReport();
         break;
 
-    case $uri === '/api/llm/chat' && $method === 'POST':
+    case $uri === 'v2/api/llm/session/update' && $method === 'POST':
+
+        break;
+
+    case $uri === 'v2/api/llm/session/delete' && $method === 'POST':
+
+        break;
+
+    /* -------------------- LLM -------------------- */
+    case $uri === 'v2/api/query' && $method === 'GET':
+        $controller->queryInteractions();
+        break;
+
+
+    /* -------------------- LLM -------------------- */
+
+
+    case $uri === 'v2/api/llm/report/create' && $method === 'POST':
+        $controller->generateLLMReport();
+        break;
+    
+    case $uri === 'v2/api/llm/report' && $method === 'GET':
+        $controller->getMostRecentReport();
+        break;
+
+    case $uri === 'v2/api/llm/chat' && $method === 'POST':
         $controller->userLLMChat();
         break;
 
-    case $uri === '/api/llm/feedback' && $method === 'POST':
+    case $uri === 'v2/api/llm/feedback' && $method === 'POST':
         $controller->submitLLMFeedback();
         break;
+
+
+    /* -------------------- LLM -------------------- */
+
 
     /* -------------------- Default 404 -------------------- */
     default:

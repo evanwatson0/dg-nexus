@@ -1,27 +1,35 @@
 <?php
 
-use App\Services\GeneDrugDataPipeline;
+
   require_once __DIR__ . '/../../bootstrap.php';
 
-  require ROOT_PATH . '/app/auth/auth_check.php';
-  include ROOT_PATH . '/data_flow/interaction_storage.php';
-  include ROOT_PATH . '/data_flow/dgi_req.php';
+  // require ROOT_PATH . '/app/auth/auth_check.php';
+  // include ROOT_PATH . '/data_flow/interaction_storage.php';
+  // include ROOT_PATH . '/data_flow/dgi_req.php';
 
-  if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    exit('Method Not Allowed');
-  }
+  include ROOT_PATH . '/app/Services/GeneDrugDataPipeline.php';
+
+use App\Services\DGI_DB_API;
+use App\Services\GeneDrugDataPipeline;
+
+  // if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+  //   http_response_code(405);
+  //   exit('Method Not Allowed');
+  // }
 
   // generate new gene drug pipeline
-  $conn = get_connection();
-  $pipeline = new GeneDrugDataPipeline($conn);
+  $pipeline = new GeneDrugDataPipeline();
 
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $gene = $_POST['gene'] ?? '';
-    $drug = $_POST['drug'] ?? '';
+    $gene = $_POST['gene'] ?? Null;
+    $drug = $_POST['drug'] ?? Null;
 
+    if ($gene) {
+      $payload = DGI_DB_API::request_gene($gene);
+    } else if ($drug) {
+      DGI_DB_API::request_drug($drug);
+    }
     // retrieve the API stuff
-    $payload = dgi_db_req($gene, $drug);
 
     if (!$payload) {
       http_response_code(405);
@@ -52,14 +60,14 @@ use App\Services\GeneDrugDataPipeline;
 
 
   <!-- Styling resources for Header -->
-  <link rel="stylesheet" href="styling/backbone.css">
-  <link rel="stylesheet" href="styling/drug_gene_loader.css">
-  <link rel="stylesheet" href="styling/header.css">
+  <link rel="stylesheet" href="assets/css/backbone.css">
+  <link rel="stylesheet" href="assets/css/drug_gene_loader.css">
+  <link rel="stylesheet" href="assets/css/header.css">
 
 </head>
 
 <body>
-  <?php include ROOT_PATH . '/pages/extras/header.php' ?>
+  <?php include ROOT_PATH . '/public/pages/elements/header.php' ?>
 
   <main>
     <h2>Drug-Gene Relation Loader</h2>
