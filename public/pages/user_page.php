@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../../bootstrap.php';
-// require ROOT_PATH . '/app/auth/auth_check.php';
+// require_once ROOT_PATH . '/app/auth/auth_check.php';
 ?>
 
 <!DOCTYPE html>

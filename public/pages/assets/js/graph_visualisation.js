@@ -6,7 +6,7 @@
  * 期望欄位：drug, gene, relation, pmid, source
  * 
  */
-function normaliseToRows(payload) {
+export function normaliseToRows(payload) {
     // 1) 若已是標準列陣列
     if (Array.isArray(payload) && payload.length && payload[0].drug && payload[0].gene) {
         return payload;
@@ -30,7 +30,8 @@ function normaliseToRows(payload) {
  * @param {*} rows 
  * @returns 
  */
-function renderTable(rows) {
+export function renderTable(rows) {
+    const tableEl = document.getElementById('table');
     if (rows === undefined) {
         tableEl.innerHTML = '<div class="muted">No data</div>';
         return;   
@@ -67,7 +68,8 @@ function renderTable(rows) {
  * 
  * 簡易 SVG 網路圖：把 gene 放左邊，drug 放右邊，中間拉線
  */
-function renderMiniGraph(rows) {
+export function renderMiniGraph(rows) {
+    const svg = document.getElementById('graph');
     if (rows === undefined) {
         return;   
     }
@@ -231,6 +233,6 @@ function renderMiniGraph(rows) {
  * 
  * Reformats fields taken from database for use in HTML output
  */
-function esc(s) {
+export function esc(s) {
     return String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 }

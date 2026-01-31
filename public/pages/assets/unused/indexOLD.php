@@ -7,24 +7,15 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../bootstrap.php';
-require ROOT_PATH . '/app/Controllers/ApiController.php';
+require ROOT_PATH . '/app/auth/auth_check.php';
 
 use App\Controllers\ApiController;
 
 // Set JSON response header
 header('Content-Type: application/json; charset=utf-8');
 
-$data = json_decode(file_get_contents('php://input'), true);
-
-$endpoint = $_GET['endpoint'] ?? '';
+$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $method = $_SERVER['REQUEST_METHOD'];
-
-if (!$endpoint) {
-    http_response_code(400);
-    echo json_encode(['error' => 'Missing endpoint']);
-    exit;
-}
-
 
 $controller = new ApiController();
 
@@ -33,25 +24,25 @@ $controller = new ApiController();
 switch (true) {
 
     /* -------------------- Session -------------------- */
-    case $endpoint === 'session_create' && $method === 'POST':
+    case $uri === 'v2/api/session/create' && $method === 'POST':
         $controller->createLLMSession();
         break;
 
-    case $endpoint === 'session_get' && $method === 'POST':
+    case $uri === 'v2/api/session' && $method === 'POST':
         // getLLMSession
         break;
 
 
-    case $endpoint === 'session_update' && $method === 'POST':
+    case $uri === 'v2/api/llm/session/update' && $method === 'POST':
         // endLLMSession
         break;
 
-    case $endpoint === 'session_delete' && $method === 'POST':
+    case $uri === 'v2/api/llm/session/delete' && $method === 'POST':
         // Delete LLM Session
         break;
 
     /* -------------------- Interactions -------------------- */
-    case $endpoint === 'query' && $method === 'POST':
+    case $uri === '/v2/api/query' && $method === 'POST':
         $controller->queryInteractions();
         break;
 
@@ -59,19 +50,19 @@ switch (true) {
     /* -------------------- LLM -------------------- */
 
 
-    case $endpoint === 'v2/api/llm/report/create' && $method === 'POST':
+    case $uri === 'v2/api/llm/report/create' && $method === 'POST':
         $controller->generateLLMReport();
         break;
     
-    case $endpoint === 'v2/api/llm/report' && $method === 'GET':
+    case $uri === 'v2/api/llm/report' && $method === 'GET':
         $controller->getMostRecentReport();
         break;
 
-    case $endpoint === 'v2/api/llm/chat' && $method === 'POST':
+    case $uri === 'v2/api/llm/chat' && $method === 'POST':
         $controller->userLLMChat();
         break;
 
-    case $endpoint === 'v2/api/llm/feedback' && $method === 'POST':
+    case $uri === 'v2/api/llm/feedback' && $method === 'POST':
         $controller->submitLLMFeedback();
         break;
 
@@ -84,4 +75,3 @@ switch (true) {
         echo json_encode(['success' => false, 'message' => 'Endpoint not found']);
         break;
 }
-exit;

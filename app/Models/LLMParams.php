@@ -13,12 +13,12 @@ namespace App\Models;
 class LLMParams {
 
   private static $model = 'gpt-4.1-nano-2025-04-14';
-  private static float $temperature = 0.6;
+  private static $temperature = 0.6;
   
   /* --------------------------------------------------------------
     Prompt Text
   -------------------------------------------------------------- */
-  private static string $report_system="
+  private static string $report_system=<<<'PROMPT'
     You are an expert clinicalian with a reliable knowledge in genetic relations
     between drugs. You only give accurate medical explanations according to the literature
     and you cite real diagnostic criteria and biological mechanisms when relevant. 
@@ -67,9 +67,9 @@ class LLMParams {
     NEVER include italics, bold, tables.
     Output the heads with <h2> htmls, and the paragraphs with <p>. Don't include any other html    
     Output should be for the report only
-  ";
+  PROMPT;
 
-  private static string $report_assistant = `
+  private static string $report_assistant = <<<'PROMPT'
     <h2>Overview</h2> 
     <p>EGFR (Epidermal Growth Factor Receptor) encodes a transmembrane receptor tyrosine kinase located on chromosome 7p11.2. 
     It is involved in regulating cell proliferation, survival, differentiation, and migration. Upon binding its ligands, such as EGF or TGF-α, 
@@ -104,7 +104,7 @@ class LLMParams {
     <p> National Cancer Institute, EGFR Targeted Therapies — <a href="https://www.cancer.gov/about-cancer/treatment/drugs/egfr-inhibitors">https://www.cancer.gov/about-cancer/treatment/drugs/egfr-inhibitors</a></p> 
     <p> Cross, D. A. et al., “AZD9291, an irreversible EGFR TKI, overcomes T790M-mediated resistance,” Cancer Discovery 2014 — <a href="https://cancerdiscovery.aacrjournals.org/content/4/9/1046">https://cancerdiscovery.aacrjournals.org/content/4/9/1046</a></p> 
     <p>Li, S. et al., “EGFR-targeted monoclonal antibodies in cancer therapy,” Clinical Cancer Research 2018 — <a href="https://clincancerres.aacrjournals.org/content/24/15/3347">https://clincancerres.aacrjournals.org/content/24/15/3347</a></p>
-  `;
+  PROMPT;
 
   /**
    * @var array
@@ -114,18 +114,18 @@ class LLMParams {
    * 
    * "user", "assistant", "system"
    */
-  private static string $user_chat_system_text = `
+  private static string $user_chat_system_text = <<<'PROMPT'
   As a biomedical expert, you will then respond to users asking queries pertaining to the report you produced, and the 
   previously described drug gene relationships. Respond to the users questions with your knowledge, producing a paragraph response.
   You only give a pure text output, do NOT include any html elements. You only cite links you were given in previous inputs.
   You only respond to queries within a BIOMEDICAL context. You link back to your report when you can
-`;
+  PROMPT;
 
-  private static string $user_chat_user_text = `
+  private static string $user_chat_user_text = <<<PROMPT
     Tell me more about Gefitinib, and it's current use in the medical domain.
-  `;
+  PROMPT;
 
-  private static string $user_chat_assistant_text = `
+  private static string $user_chat_assistant_text = <<<PROMPT
     Gefitinib is a first-generation tyrosine kinase inhibitor (TKI) that selectively targets the intracellular ATP-binding
     domain of the Epidermal Growth Factor Receptor (EGFR). By blocking EGFR signalling, it inhibits downstream
     pathways such as MAPK/ERK and PI3K/AKT, which are crucial for cell proliferation and survival. 
@@ -134,7 +134,7 @@ class LLMParams {
     It is generally prescribed as a first-line therapy in these cases. While initially effective, resistance often develops, 
     most notably via the T790M mutation, which can limit long-term efficacy. Ongoing clinical strategies include sequencing 
     Gefitinib with second- or third-generation TKIs, such as Osimertinib, to overcome resistance and maintain therapeutic benefit.
-  `;
+  PROMPT;
 
   /* --------------------------------------------------------------
     Prompt Builders

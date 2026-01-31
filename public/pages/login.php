@@ -14,7 +14,7 @@ if (isset($_SESSION['user_id'])) {
 <html>
 <head>
     <title>Login</title>
-    <link rel="stylesheet" href="styling/login_page.css">
+    <link rel="stylesheet" href="assets/css/login_page.css">
 
 </head>
 <body>

@@ -1,4 +1,6 @@
 import { generateLLMReport, retrieveGDInteractions, sendLLMChat } from '../rest.js';
+import { normaliseToRows, renderMiniGraph, renderTable } from './assets/js/graph_visualisation.js';
+
 import { mdToPdfSelectable } from './assets/js/pdf_convert.js';
 
 
@@ -26,16 +28,18 @@ gdiSearchForm.addEventListener('submit', async (e) => {
     // retrieve them using function
     gdiSearchFormData = new FormData(gdiSearchForm);
     
+    let searchRespJSON, searchRespRaw, data;
     try {
-        const searchRespRaw = retrieveGDInteractions(gdiSearchFormData.get('input'), gdiSearchFormData.get('gene_or_drug'), gdiSearchFormData.get('relation_type'));
-        const searchRespJSON = JSON.parse(searchRespRaw);
+        searchRespRaw = await retrieveGDInteractions(gdiSearchFormData.get('input'), gdiSearchFormData.get('gene_or_drug'), gdiSearchFormData.get('relation_type'));
+        searchRespJSON = JSON.parse(searchRespRaw);
+        data = searchRespJSON["data"];
     } catch (err) {
         console.error('Error sending to llm_request.php:', err);
-        console.error("RAW RESPONSE:", llmRespRaw);
+        console.error("RAW RESPONSE:", searchRespRaw);
         return;
     }
 
-    data = searchRespJSON["data"];
+    
     const rows = normaliseToRows(data);
 
 
@@ -59,11 +63,11 @@ generateLLMButton.addEventListener('submit', async(e) => {
     const llmReportOutput = document.getElementById('llm-report-output');
 
     try {
-        const reportRespRaw = generateLLMReport(gdiSearchFormData.get('input'), gdiSearchForm.get('gene_or_drug'), gdiSearchFormData.get('relation_type'), lastStructured, sessionID);
+        const reportRespRaw = await generateLLMReport(gdiSearchFormData.get('input'), gdiSearchForm.get('gene_or_drug'), gdiSearchFormData.get('relation_type'), lastStructured, sessionID);
         const reportRespJSON = JSON.parse(reportRespRaw);
     } catch (err) {
         console.error('Error generating llm report:', err);
-        console.error("RAW RESPONSE:", llmRespRaw);
+        console.error("RAW RESPONSE:", reportRespRaw);
         return;
     }
 
@@ -110,7 +114,7 @@ llmChatForm.addEventListener("submit", async (e) => {
     const fd = new FormData(llmChatForm);
 
     try {
-        const llmRespRaw = sendLLMChat(fd.get('llm-chat-input'));
+        const llmRespRaw = await sendLLMChat(fd.get('llm-chat-input'));
         const llmRespJSON = JSON.parse(llmRespRaw);
 
         llmResponseField.textContent = llmRespJSON['data'] || 'No LLM text received';

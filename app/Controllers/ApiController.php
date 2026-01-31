@@ -2,9 +2,13 @@
 namespace App\Controllers;
 
 
+
+require_once ROOT_PATH . '/config/db_connect.php';
+require ROOT_PATH . '/app/Services/GeneDrugDataPipeline.php';
+require ROOT_PATH . '/app/Services/LLMDataPipeline.php';
+
 use App\Services\GeneDrugDataPipeline;
 use App\Services\LLMDataPipeline;
-require ROOT_PATH . '/config/db_connect.php';
 
 class ApiController
 {
@@ -24,17 +28,25 @@ class ApiController
 
     public function queryInteractions()
     {
-        $data = $_POST;
-        $gene = $data['gene'] ?? '';
-        $drug = $data['drug'] ?? '';
+        // $data = $_POST;
+        $data = json_decode(file_get_contents('php://input'), true);
+        $gene = $data['gene'] ?? null;
+        $drug = $data['drug'] ?? null;
         $relation_type = $data['relation_type'] ?? '';
+
+        if ($gene && $drug) {
+                echo json_encode([
+                'success' => false,
+                'data' => null
+            ]);
+        }
 
         $results = $this->geneDrugPipeline->retrieveRelations($gene, $drug, $relation_type);
 
 
         echo json_encode([
             'success' => true,
-            'data' => $results
+            'data' => $results,
         ]);
     }
 

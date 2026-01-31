@@ -6,6 +6,10 @@ require ROOT_PATH . '/app/Controllers/LoginController.php';
 
 use App\Controllers\LoginController;
 
+function gotoLoginPage() {
+    header('Location: ../../public/pages/login.php?error=1');
+}
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: ../pages/login.php?error=1');
     exit;
@@ -13,24 +17,25 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 $cont = new LoginController();
 
-$email = $_POST['email'] ?? '';
-$password = $_POST['password'] ?? '';
+$email = $_POST['email'] ?? null;
+$password = $_POST['password'] ?? null;
 $new_user = $_POST['new-user'] ?? false;
 
 $user_id = $cont->authenticate($email, $password);
 
 
+
 if ($new_user) {
-    // new 'user' selected details 
-    if ($user_id) {
-        header('Location: ../../public/pages/login.php?error=1');
+    // new 'user' selected details but email already exists
+    if ($cont->accountExists($email)) {
+        gotoLoginPage();
         exit;
     }
 
     $user_id = $cont->register($email, $password);
 } else {
     if ($user_id) {
-        header('Location: ../../public/pages/login.php?error=1');
+        gotoLoginPage();
         exit;
     }
 }

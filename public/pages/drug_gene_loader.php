@@ -8,9 +8,10 @@
   // include ROOT_PATH . '/data_flow/dgi_req.php';
 
   include ROOT_PATH . '/app/Services/GeneDrugDataPipeline.php';
+  include ROOT_PATH . '/public/api/DGI_DB.php';
 
-use App\Services\DGI_DB_API;
-use App\Services\GeneDrugDataPipeline;
+  use App\Services\DGI_DB_API;
+  use App\Services\GeneDrugDataPipeline;
 
   // if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
   //   http_response_code(405);
@@ -27,7 +28,7 @@ use App\Services\GeneDrugDataPipeline;
     if ($gene) {
       $payload = DGI_DB_API::request_gene($gene);
     } else if ($drug) {
-      DGI_DB_API::request_drug($drug);
+      $payload = DGI_DB_API::request_drug($drug);
     }
     // retrieve the API stuff
 

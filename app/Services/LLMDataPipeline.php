@@ -79,8 +79,8 @@
 namespace App\Services;
 
 require_once __DIR__ . '/../../bootstrap.php';
-require ROOT_PATH . '/app/Models/OpenAIParams.php';
-require ROOT_PATH . '/config/db_connect.php';
+require ROOT_PATH . '/app/Models/LLMParams.php';
+require_once ROOT_PATH . '/config/db_connect.php';
 
 use App\Models\LLMParams;
 use mysqli;

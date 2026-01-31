@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use mysqli;
 
-require ROOT_PATH . '/config/db_connect.php';
+require_once ROOT_PATH . '/config/db_connect.php';
 
 class LoginController
 {
