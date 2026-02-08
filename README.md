@@ -45,16 +45,15 @@ xmlwriter
 ## Set up Mysql Database
 See the [database setup guide](database/readme.md) for documentation on setting up the MySQL database.
 
-Then, open 'config.php' and enter in parameters for DB_HOST, DB_NAME, DB_USER, DB_PASS corresponding to your MySQL database set up
+Then, open 'src/config/db_connect.php' and enter in parameters for DB_HOST, DB_NAME, DB_USER, DB_PASS corresponding to your MySQL database set up
 
 ## Setting LLM API Token
-Note: This project uses OpenAI's API to make requests using ChatGPT models. 
-Users must generate a key to use the LLM features
+Note: This project uses OpenAI's API to generate reports, users must generate an API key to use the LLM features
 
 ### Generating a Token
-Go to OpenAI's [website](https://platform.openai.com/docs/quickstart?desktop-os=windows) to generate a key
+Go to [website](https://platform.openai.com/docs/quickstart?desktop-os=windows) to generate a key
 
-### Storing a Key
+### Setting Key
 #### On Windows 
 type into directory
 ```
@@ -67,7 +66,7 @@ type into directory
 echo 'export OPENAI_API_KEY="sk-your-key-here"' >> ~/.zshrc
 source ~/.zshrc
 ```
-check it is stored correctly
+confirm it is correctly stored
 ```
 echo $OPENAI_API_KEY
 ```
@@ -76,4 +75,5 @@ echo $OPENAI_API_KEY
 
 To run this program, run a php server on the following file
 
-'frontend/login.php'
+'src/public/pages/login.php'
+
