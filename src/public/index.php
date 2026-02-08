@@ -59,21 +59,21 @@ switch (true) {
     /* -------------------- LLM -------------------- */
 
 
-    case $endpoint === 'v2/api/llm/report/create' && $method === 'POST':
+    case $endpoint === 'llm_report_create' && $method === 'POST':
         $controller->generateLLMReport();
         break;
     
-    case $endpoint === 'v2/api/llm/report' && $method === 'GET':
+    case $endpoint === 'llm_report_get' && $method === 'GET':
         $controller->getMostRecentReport();
         break;
 
-    case $endpoint === 'v2/api/llm/chat' && $method === 'POST':
+    case $endpoint === 'llm_chat' && $method === 'POST':
         $controller->userLLMChat();
         break;
 
-    case $endpoint === 'v2/api/llm/feedback' && $method === 'POST':
-        $controller->submitLLMFeedback();
-        break;
+    // case $endpoint === 'v2/api/llm/feedback' && $method === 'POST':
+    //     $controller->submitLLMFeedback();
+    //     break;
 
 
 

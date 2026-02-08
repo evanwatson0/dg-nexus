@@ -4,7 +4,7 @@
 -------------------------------------------------------------- */
 
 export async function createLLMSession() {
-    const resp = await fetch('/index.php?endpoint=session_create', {
+    const resp = await fetch('../index.php?endpoint=session_create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
     });
@@ -17,7 +17,7 @@ export async function getLLMSession(session_name) {
         session_name
     };
 
-    const resp = await fetch('./index.php?endpoint=session_get', {
+    const resp = await fetch('../index.php?endpoint=session_get', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -27,7 +27,7 @@ export async function getLLMSession(session_name) {
 }
 
 export async function endLLMSession() {
-    const resp = await fetch('/index.php?endpoint=session_update', {
+    const resp = await fetch('../index.php?endpoint=session_update', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
     });
@@ -36,7 +36,7 @@ export async function endLLMSession() {
 }
 
 export async function deleteLLMSession() {
-    const resp = await fetch('/index.php?endpoint=session_delete', {
+    const resp = await fetch('../index.php?endpoint=session_delete', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
     });
@@ -57,7 +57,7 @@ export async function generateLLMReport(input, type, relation_type, rows) {
         relation_type
     };
 
-    const resp = await fetch('/index.php?endpoint=llm_report_create', {
+    const resp = await fetch('../index.php?endpoint=llm_report_create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -73,7 +73,7 @@ export async function sendLLMChat(userQuery) {
         reset: false
     };
 
-    const resp = await fetch('/index.php?endpoint=llm_chat', {
+    const resp = await fetch('../index.php?endpoint=llm_chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)

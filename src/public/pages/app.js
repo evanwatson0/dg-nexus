@@ -3,13 +3,14 @@ import { normaliseToRows, renderMiniGraph, renderTable } from './assets/js/graph
 
 import { mdToPdfSelectable } from './assets/js/pdf_convert.js';
 
-
+// Keep track of previous form inputs
 
 let lastStructured = [];
 let gdiSearchFormData;
 let previousLLMText = "";
 
 const generateLLMButton = document.getElementById('generate-llm-btn');
+const downloadLLMButton = document.getElementById('download-llm-btn');
 const saveLLMButton = document.getElementById('save-llm-btn');
 
 
@@ -57,44 +58,45 @@ gdiSearchForm.addEventListener('submit', async (e) => {
     Listener: Gemerate LLM Report upon Button Press 
     Author: Evan
 -------------------------------------------------------------- */
-let prevReportResponseID;
-generateLLMButton.addEventListener('submit', async(e) => {
+// let prevReportResponseID;
+
+generateLLMButton.addEventListener('click', async(e) => {
+    e.preventDefault();
     
     const llmReportOutput = document.getElementById('llm-report-output');
 
+    let reportRespJSON, reportRespRaw;
     try {
-        const reportRespRaw = await generateLLMReport(gdiSearchFormData.get('input'), gdiSearchForm.get('gene_or_drug'), gdiSearchFormData.get('relation_type'), lastStructured, sessionID);
-        const reportRespJSON = JSON.parse(reportRespRaw);
+        reportRespRaw = await generateLLMReport(gdiSearchFormData.get('input'), gdiSearchFormData.get('gene_or_drug'), gdiSearchFormData.get('relation_type'), lastStructured);
+        reportRespJSON = JSON.parse(reportRespRaw);
     } catch (err) {
         console.error('Error generating llm report:', err);
         console.error("RAW RESPONSE:", reportRespRaw);
         return;
     }
 
-
-
     let llmText = reportRespJSON['data'];
-    prevReportResponseID = reportRespJSON['response_id'];
+    // prevReportResponseID = reportRespJSON['response_id'];
 
     // Update previous text on frontend, and store copy 
     // if user wants to save the report
     llmReportOutput.textContent = llmText || 'No LLM Text Received';
     previousLLMText = llmText;
 
-
     // Once an LLM report is generated, only then can the User
     // SAVE the LLM report, discuss the results and give feedback 
     saveLLMButton.disabled = false;
+    downloadLLMButton.disabled = false;
 });
 
 
 /* --------------------------------------------------------------
-    Listener: Save Button for the LLM Report 
+    Listener: Download Button for the LLM Report 
     Author: Evan
 -------------------------------------------------------------- */
-saveLLMButton.addEventListener('submit', async (e) => {
+downloadLLMButton.addEventListener('submit', async (e) => {
     const text = previousLLMText.trim();
-    await mdToPdfSelectable(text, 'output.pdf', 'Report', 'styling/logo,png');
+    await mdToPdfSelectable(text, 'output.pdf', 'Report', 'assets/images/logo.png');
 });
 
 

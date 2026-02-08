@@ -4,7 +4,7 @@
   "description": "As part of BIOM9450 major project",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -20,7 +20,9 @@
   "dependencies": {
     "module": "^2.0.0"
   },
-  "type":"module"
-
-
+  "type": "module",
+  "devDependencies": {
+    "jest": "^30.2.0",
+    "node-fetch": "^3.3.2"
+  }
 }

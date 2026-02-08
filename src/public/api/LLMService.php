@@ -1,7 +1,10 @@
 <?php 
 
-  namespace App\Services;
-  use App\Models\LLMParams;
+namespace App\Services;
+
+require_once __DIR__ . '/../../bootstrap.php';
+require_once ROOT_PATH . '/app/Models/LLMParams.php';
+use App\Models\LLMParams;
 class LLMService {
 
 

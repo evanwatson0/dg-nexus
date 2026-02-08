@@ -79,17 +79,20 @@ class ApiController
 
     public function generateLLMReport()
     {
-        $query_json = $_POST['query'] ?? '';
-        $query_data = json_decode($query_json, true);
-
-        $input = $_POST['input'] ?? Null;
-        $type = $_POST['type'] ?? Null;
-        $relation_type = $_POST['relation_type'] ?? '';
         
-        if (!$input || !$type) {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $query_data = $data['query'] ?? null;
+        // $query_data = json_decode($query_json, true);
+
+        $input = $data['input'] ?? Null;
+        $type = $data['type'] ?? Null;
+        $relation_type = $data['relation_type'] ?? Null;
+        
+        // TODO: Query_data currently comes back NULL right now
+        if (!$input || !$type || !$query_data) {
             echo json_encode([
             'success' => false,
-            'data' => Null,
+            'data' => $data,
             'response_id' => Null
         ]);
         }

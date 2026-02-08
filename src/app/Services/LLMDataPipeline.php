@@ -79,8 +79,11 @@
 namespace App\Services;
 
 require_once __DIR__ . '/../../bootstrap.php';
-require ROOT_PATH . '/app/Models/LLMParams.php';
+require_once ROOT_PATH . '/app/Models/LLMParams.php';
+require_once ROOT_PATH . '/public/api/LLMService.php';
 require_once ROOT_PATH . '/config/db_connect.php';
+
+// require LLM Service
 
 use App\Models\LLMParams;
 use mysqli;
@@ -89,6 +92,8 @@ use mysqli;
 class LLMDataPipeline
 {
     private mysqli $conn;
+
+    // TODO: Change Hardcoded sessionID
     private int $current_session_id;
 
     private $chat_history;
