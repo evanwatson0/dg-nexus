@@ -125,7 +125,8 @@ require_once __DIR__ . '/../../bootstrap.php';
                 <div id="report" class="tab-content active" data-group="llm-tabs">
                     <div class="btns" style="margin-bottom:8px;">
                         <button type="button" id="generate-llm-btn" disabled>Generate Report</button>
-                        <button type="button" id="save-llm-btn" disabled>Save Report</button>
+                        <button type="button" id="save-llm-btn" disabled>Save LLM</button>
+                        <button type="button" id="download-llm-btn" disabled>Download Report</button>
                     </div>
                     <p id="llm-report-output"  class="muted">Report will generate here...</p>
                 </div>
